@@ -5,7 +5,7 @@ const path = require('path');
 const exphbs = require('express-handlebars');
 const bodyparser = require('body-parser');
 
-const employeeController = require('./controllers/employeeController');
+const airbnbController = require('./controllers/airbnbController');
 
 var app = express();
 app.use(bodyparser.urlencoded({
@@ -16,8 +16,9 @@ app.set('views', path.join(__dirname, '/views/'));
 app.engine('hbs', exphbs({ extname: 'hbs', defaultLayout: 'mainLayout', layoutsDir: __dirname + '/views/layouts/' }));
 app.set('view engine', 'hbs');
 
-app.listen(3000, () => {
-    console.log('Express server started at port : 3000');
+app.listen(3100, () => {
+    console.log('Express server started at port : 3100');
 });
 
-app.use('/employee', employeeController);
+app.use('/airbnb', airbnbController);
+app.use('/scripts', express.static(__dirname + '/scripts/'));

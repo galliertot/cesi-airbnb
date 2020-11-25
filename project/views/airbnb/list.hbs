@@ -1,0 +1,85 @@
+<h3 class="mb-5 d-flex flex-row">
+    <a class="btn btn-success mr-5 mr-auto" href="/airbnb"><i class="fa fa-plus mr-2"></i> Nouveau</a>
+    <div class="d-flex flex-row ml-auto">
+        <input type="date" class="btn btn-date float-right" id="date" value="{{filtre}}">
+        <button type="button" class="btn btn-sucess mx-2" onclick="refresh(1, null, getIfTrue({{sorted}}), true)">✓</button>
+        <button type="button" class="btn btn-danger" onclick="refresh(1, null, getIfTrue({{sorted}}), null)">X</button>
+    </div>
+</h3>
+{{#if list}}
+    <table id="dtBasicExample" class="table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Image</th>
+                {{#if sorted}}
+                    <th>Nom <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
+                {{else}}
+                    <th>Nom <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
+                {{/if}}
+                <th>Date de création</th>
+                <th></th>
+            </tr>
+        </thead>    
+        <tbody>
+            {{#each list}}
+            <tr class="cursor-pointer" onclick='showModal("{{this.name}}", "{{this.description}}", "{{this.picture_url}}", "{{this.host_since}}")'>
+                <td><img width="200" src="{{this.picture_url}}"/></td>
+                <td width="80%"><p>{{this.name}}</p></td>
+                <td width="20%"><p>{{this.host_since}}</p></td>
+                <td class="d-flex ">
+                    <a href="/airbnb/{{this._id}}" class="col-6"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+                    <a href="/airbnb/delete/{{this._id}}" onclick="return confirm('Etes-vous sur de vouloir supprimer ?');" class="col-6"><i class="text-danger fa fa-trash fa-lg" aria-hidden="true"></i></a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <a class="float-left text-info cursor-pointer display-4" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
+    <center>Page {{currentPage}}</center>
+    <a class="float-right text-info cursor-pointer display-4"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
+{{else}}
+    <h2 class="text-center">Aucune donnée pour ce jour</h2>
+{{/if}}
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img width="100%" id="modalImage"></p>
+        <h5>Description</h5>
+        <p id="modalDescription"></p>
+        <h5>Date de création</h5>
+        <p id="modalDate"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    function refresh(page, increment, sort, filtre) {
+        let p = parseInt(page) || 0
+        let i = increment != null ? increment : 0
+        let s = sort == "true" || sort === true ? true : false
+        let f = filtre == "null" || filtre == null ? null : $('#date').val()
+        window.open("/airbnb/list?page=" + (p + i == 0 ? p : p + i) + "&sorted="+s+"&filtre="+f,"_self");
+    }
+    function getIfTrue(active) {
+        return active == "true" || active === true ? true : false
+    }
+    function showModal(title,description,image,date) {
+        $('#modal').modal('show')
+        $('#modalLabel').html(title)
+        $('#modalDescription').html(description)
+        $('#modalImage').attr('src', image);
+        $('#modalDate').html(date)
+    }
+</script>  
