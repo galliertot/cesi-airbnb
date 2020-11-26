@@ -21,12 +21,22 @@ function insertRecord(req, res) {
     var airbnb = new Airbnb();
     airbnb.name = req.body.name;
     airbnb.description = req.body.description;
+    airbnb.picture_url = req.body.picture_url;
+
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+
+
+    airbnb.host_since = today;
     airbnb.save((err, doc) => {
         if (!err)
             res.redirect('airbnb/list');
         else {
             if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
                 res.render("airbnb/addOrEdit", {
                     viewTitle: "Nouveau Airbnb",
                     airbnb: req.body
@@ -43,7 +53,6 @@ function updateRecord(req, res) {
         if (!err) { res.redirect('airbnb/list'); }
         else {
             if (err.name == 'ValidationError') {
-                handleValidationError(err, req.body);
                 res.render("airbnb/addOrEdit", {
                     viewTitle: 'Mise à jour',
                     airbnb: req.body
@@ -59,11 +68,10 @@ function updateRecord(req, res) {
 router.get('/list', async (req, res) => {
     const { page = 1, limit = 10, sorted = false, filtre = null} = req.query;
     try {
-        var srt = {}
-        if (sorted == "true" || sorted === true) { srt = { name: 1 } }
+        var srt = srt = { host_since: -1 }
+        if (sorted == "true" || sorted === true) { srt = { host_since: 1 } }
         var filter = filtre == "null" || filtre == null ? {} : filter = { host_since:filtre }
-        console.log(filter)
-        const airbnb = await Airbnb.find(filter)
+        const airbnb = await Airbnb.find(filter).lean()
         .limit(limit * 1)
         .skip((page - 1) * limit)
         .sort(srt)
@@ -80,22 +88,6 @@ router.get('/list', async (req, res) => {
     console.error(err.message);
     }
 });
-
-
-function handleValidationError(err, body) {
-    for (field in err.errors) {
-        switch (err.errors[field].path) {
-            case 'name':
-                body['nameError'] = err.errors[field].message;
-                break;
-            case 'description':
-                body['descriptionError'] = err.errors[field].message;
-                break;
-            default:
-                break;
-        }
-    }
-}
 
 router.get('/:id', (req, res) => {
     Airbnb.findById(req.params.id, (err, doc) => {
@@ -118,3 +110,4 @@ router.get('/delete/:id', (req, res) => {
 });
 
 module.exports = router;
+  

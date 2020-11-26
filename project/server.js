@@ -6,8 +6,10 @@ const exphbs = require('express-handlebars');
 const bodyparser = require('body-parser');
 
 const airbnbController = require('./controllers/airbnbController');
+const tensorflowController = require('./controllers/tensorflowController');
 
 var app = express();
+
 app.use(bodyparser.urlencoded({
     extended: true
 }));
@@ -20,5 +22,7 @@ app.listen(3100, () => {
     console.log('Express server started at port : 3100');
 });
 
+app.use(express.static('public'));
 app.use('/airbnb', airbnbController);
+app.use('/tensorflow', tensorflowController);
 app.use('/scripts', express.static(__dirname + '/scripts/'));

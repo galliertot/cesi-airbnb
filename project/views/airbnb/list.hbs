@@ -11,23 +11,22 @@
         <thead>
             <tr>
                 <th>Image</th>
+                <th>Nom</th>
                 {{#if sorted}}
-                    <th>Nom <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
+                    <th>Date de création <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
                 {{else}}
-                    <th>Nom <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
+                    <th>Date de création <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
                 {{/if}}
-                <th>Date de création</th>
                 <th></th>
             </tr>
         </thead>    
         <tbody>
             {{#each list}}
             <tr class="cursor-pointer" onclick='showModal("{{this.name}}", "{{this.description}}", "{{this.picture_url}}", "{{this.host_since}}")'>
-                <td><img width="200" src="{{this.picture_url}}"/></td>
+                <td style="padding:0"><img width="200" src="{{this.picture_url}}"/></td>
                 <td width="80%"><p>{{this.name}}</p></td>
                 <td width="20%"><p>{{this.host_since}}</p></td>
-                <td class="d-flex ">
-                    <a href="/airbnb/{{this._id}}" class="col-6"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
+                <td class="d-flex">
                     <a href="/airbnb/delete/{{this._id}}" onclick="return confirm('Etes-vous sur de vouloir supprimer ?');" class="col-6"><i class="text-danger fa fa-trash fa-lg" aria-hidden="true"></i></a>
                 </td>
             </tr>

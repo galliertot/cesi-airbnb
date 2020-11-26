@@ -1,0 +1,106 @@
+<form action="/tensorflow" method="POST" autocomplete="off" class="d-flex flex-row my-2 border p-5" id="form" enctype="multipart/form-data">
+    <img id="img" width="200" height="200" class="col-md-2 ml-auto" src="/files/emptyCell.png">
+    <div class="form-group col-md-10 d-flex flex-wrap">
+        <h2 class="col-12">Choisir l'image à analyser</h2>
+        <input type="file" id="image" class="form-control-file btn col-md-12" name="picture">
+        <input type="hidden" id="predic" name="predic">
+        <input type="hidden" id="mainPredic" name="mainPredic">
+        <button type="button" id="sub" class="btn btn-info col-md-12" onclick="presub();">Valider</button>
+    </div>
+</form>
+
+{{#if list}}
+    <table id="dtBasicExample" class="table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th width="20%">Image</th>
+                {{#if sorted}}
+                    <th width="10%">Date <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
+                {{else}}
+                    <th width="10%">Date <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
+                {{/if}}
+                <th width="15%">Nom</th>
+                <th width="5%">Taille</th>
+                <th width="15%">Type reconnus</th>
+                <th width="20%">Taux de réussites</th>
+                <th width="10%"></th>
+            </tr>
+        </thead>    
+        <tbody>
+            {{#each list}}
+            <tr class="cursor-pointer">
+                <td style="padding:0"><img width="200" src="{{this.link}}"/></td>
+                <td><p>{{this.createdAt}}</p></td>
+                <td><p>{{this.name}}</p></td>
+                <td><p>{{this.octets}}</p></td>
+                <td>{{{this.foundName}}}</td>
+                <td>{{{this.successRate}}}</td>
+                <td><a href="/tensorflow/delete/{{this._id}}" onclick="return confirm('Etes-vous sur de vouloir supprimer ?');" class="col-12"><i class="text-danger fa fa-trash fa-lg" aria-hidden="true"></i></a></td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <a class="float-left text-info cursor-pointer display-4" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
+    <center>Page {{currentPage}}</center>
+    <a class="float-right text-info cursor-pointer display-4"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
+{{else}}
+    <h2 class="text-center my-5">Aucune analyse</h2>
+{{/if}}
+
+<div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
+  <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <blockquote class="blockquote px-4 py-2">
+            <h3 class="mb-0">Chargement...</h3>
+            <footer class="blockquote-footer">C'est pas très Charlie</footer>
+        </blockquote>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    function refresh(page, increment, sort, filtre) {
+        let p = parseInt(page) || 0
+        let i = increment != null ? increment : 0
+        let s = sort == "true" || sort === true ? true : false
+        let f = filtre == "null" || filtre == null ? null : $('#date').val()
+        window.open("/tensorflow?page=" + (p + i == 0 ? p : p + i) + "&sorted="+s+"&filtre="+f,"_self");
+    }
+    function getIfTrue(active) {
+        return active == "true" || active === true ? true : false
+    }
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#img').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]); // convert to base64 string
+        }
+    }
+
+    function presub() {
+        const img = document.getElementById('img');
+        const input = document.getElementById('image');
+        if (input.value != '') {
+            $('#modal').modal('show');
+            cocoSsd.load().then(model => {
+                model.detect(img).then(predictions => {
+                    document.getElementById('mainPredic').value = JSON.stringify(predictions);
+                    mobilenet.load({version: 2, alpha:1.00}).then(model => {
+                        model.classify(img).then(predictions => {
+                            document.getElementById('predic').value = JSON.stringify(predictions);
+                            document.getElementById('form').submit();
+                        });
+                    }); 
+                });
+            });
+        }
+    }
+
+    $("#image").change(function() {
+        readURL(this);
+    });
+</script>  
