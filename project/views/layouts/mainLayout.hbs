@@ -7,7 +7,8 @@
     }
 </style>
 <head>
-    <title>Airbnb</title>
+    <title>R2QI</title>
+    <link rel="icon" type="image/jpeg" href="/files/logo.jpg" />
 
     <script src="https://unpkg.com/@tensorflow/tfjs"></script>
     <script src="https://unpkg.com/@tensorflow-models/mobilenet"></script>
@@ -22,10 +23,22 @@
 </head>
 
 <body class="bg-light">
-    <div class="row">
-        <div class="col-md-10 offset-md-1 shadow rounded my-5 p-5 bg-white">
-            {{{body}}}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+        <div class="d-md-flex d-block flex-row mx-md-auto mx-0">
+            <div class="collapse navbar-collapse mr-auto" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/airbnb/list">Airbnb</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tensorflow">TensorFlow</a>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
+    <div class="col-md-10 offset-md-1 shadow rounded my-5 p-5 bg-white">
+        {{{body}}}
     </div>
 </body> 
 </html>

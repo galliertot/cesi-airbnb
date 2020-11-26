@@ -40,12 +40,15 @@
             {{/each}}
         </tbody>
     </table>
-    <a class="float-left text-info cursor-pointer display-4" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
-    <center>Page {{currentPage}}</center>
-    <a class="float-right text-info cursor-pointer display-4"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
 {{else}}
     <h2 class="text-center my-5">Aucune analyse</h2>
 {{/if}}
+
+<div class="d-flex flex-row flex-wrap text-center">
+    <a class="float-left text-info cursor-pointer display-4 col-4" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
+    <h3 class="col-4 mt-3">Page {{currentPage}}</h3>
+    <a class="float-right text-info cursor-pointer display-4 col-4"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
+</div>
 
 <div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
