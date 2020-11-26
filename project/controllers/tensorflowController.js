@@ -11,15 +11,6 @@ router.post('/', (req, res) => {
     insertRecord(req, res);
 });
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/html'});
-  res.write('<form action="fileupload" method="post" enctype="multipart/form-data">');
-  res.write('<input type="file" name="filetoupload"><br>');
-  res.write('<input type="submit">');
-  res.write('</form>');
-  return res.end();
-}).listen(8080);
-
 function insertRecord(req, res) {
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
