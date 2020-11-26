@@ -1,11 +1,11 @@
-<form action="/tensorflow" method="POST" autocomplete="off" class="d-flex flex-row my-2 border p-5" id="form" enctype="multipart/form-data">
-    <img id="img" class="ml-auto col-md-4" style="max-height:300px" src="/files/emptyCell.png">
+<form action="/tensorflow" method="POST" autocomplete="off" class="d-flex flex-row mb-2 shadow-lg p-5" id="form" enctype="multipart/form-data">
+    <img id="img" class="ml-auto col-md-4" style="height:300px" src="/files/emptyCell.png">
     <div class="form-group col-md-8 pl-4 d-flex flex-wrap">
         <h2 class="col-12 text-center">Choisir l'image à analyser</h2>
         <input type="file" id="image" hidden class="form-control-file btn col-md-12" name="picture">
-        <button class="btn btn-success col-md-12 mb-4" type="button" id="upload">Sélectionner l'image</button>
         <input type="hidden" id="predic" name="predic">
         <input type="hidden" id="mainPredic" name="mainPredic">
+        <button class="btn btn-success col-md-12 mb-4" type="button" id="upload">Sélectionner l'image</button>
         <button type="button" id="sub" class="btn btn-info col-md-12" onclick="presub();">Valider</button>
     </div>
 </form>
@@ -17,21 +17,21 @@
             <tr class="mb-5">
                 <th width="20%">Image</th>
                 {{#if sorted}}
-                    <th width="12%">Date <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
+                    <th width="8%">Date <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
                 {{else}}
-                    <th width="12%">Date <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
+                    <th width="8%">Date <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
                 {{/if}}
                 <th width="10%">Nom</th>
-                <th width="10%">Taille</th>
+                <th width="8%">Taille</th>
                 <th width="25%">Type</th>
-                <th width="10%">Taux</th>
+                <th width="12%">Taux</th>
                 <th width="1%"></th>
             </tr>
         </thead>    
         <tbody >
             {{#each list}}
             <tr>
-                <td width="200" style="padding:0"><img width="100%" src="{{this.link}}"/></td>
+                <td style="padding:0"><img width="100%" height="100%" style="max-height: 300px;" src="{{this.link}}"/></td>
                 <td><p>{{this.createdAt}}</p></td>
                 <td><p>{{this.name}}</p></td>
                 <td><p>{{this.octets}} ko</p></td>
@@ -48,9 +48,9 @@
 {{/if}}
 
 <div class="d-flex flex-row flex-wrap text-center">
-    <a class="float-left text-info cursor-pointer display-4 col-4" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
+    <a class="float-left text-info cursor-pointer display-4 col-4 text-left" onclick='refresh({{currentPage}}, -1, getIfTrue({{sorted}}), {{filtre}})'>←</a>
     <h3 class="col-4 mt-3">Page {{currentPage}}</h3>
-    <a class="float-right text-info cursor-pointer display-4 col-4"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
+    <a class="float-right text-info cursor-pointer display-4 col-4 text-right"  onclick='refresh({{currentPage}}, 1, getIfTrue({{sorted}}), {{filtre}})'>→</a>
 </div>
 
 <div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
@@ -85,7 +85,7 @@
                 $('#upload').html($('#image').value)
                 $('#sub').show();
             }
-            reader.readAsDataURL(input.files[0]); // convert to base64 string
+            reader.readAsDataURL(input.files[0]); 
         }
     }
 
