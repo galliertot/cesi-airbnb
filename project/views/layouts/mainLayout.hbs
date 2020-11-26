@@ -5,6 +5,26 @@
     .cursor-pointer{
         cursor: pointer;
     }
+    tbody:before {
+        content:"@";
+        display:block;
+        line-height:10px;
+        text-indent:-99999px;
+    }
+    tr {
+       border-style:hidden;
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing:0 10px;
+    }
+
+    input:focus, .btn.focus, .btn:focus{
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
 </style>
 <head>
     <title>R2QI</title>

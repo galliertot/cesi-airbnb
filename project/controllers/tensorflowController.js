@@ -35,7 +35,7 @@ function insertRecord(req, res) {
             var tensorflow = new TensorFlow();
             tensorflow.link = "/files/" + req.file.filename;
             tensorflow.name = req.file.originalname;
-            tensorflow.octets = req.file.size;
+            tensorflow.octets = parseInt(req.file.size)/1000;
 
             var arrayProba = "";
             var arrayName = "";
@@ -44,7 +44,7 @@ function insertRecord(req, res) {
 
             m.forEach(element => {
                 arrayName += "<p>" + element.class + "</p>"
-                arrayProba += "<p>" + element.score + "</p>"
+                arrayProba += "<p>" + (parseFloat(element.score.toString())*100).toString().substring(0,5) + " %" + "</p>"
             });
 
             arrayName += "<hr>"
@@ -54,7 +54,7 @@ function insertRecord(req, res) {
 
             p.forEach(element => {
                 arrayName += "<p>" + element.className + "</p>"
-                arrayProba += "<p>" + element.probability + "</p>"
+                arrayProba += "<p>" + (parseFloat(element.probability.toString())*100).toString().substring(0,5) + " %" + "</p>"
             });
 
             tensorflow.successRate = arrayProba;

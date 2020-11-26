@@ -1,8 +1,9 @@
 <form action="/tensorflow" method="POST" autocomplete="off" class="d-flex flex-row my-2 border p-5" id="form" enctype="multipart/form-data">
-    <img id="img" width="200" height="200" class="col-md-2 ml-auto" src="/files/emptyCell.png">
-    <div class="form-group col-md-10 d-flex flex-wrap">
-        <h2 class="col-12">Choisir l'image à analyser</h2>
-        <input type="file" id="image" class="form-control-file btn col-md-12" name="picture">
+    <img id="img" class="ml-auto col-md-4" style="max-height:300px" src="/files/emptyCell.png">
+    <div class="form-group col-md-8 pl-4 d-flex flex-wrap">
+        <h2 class="col-12 text-center">Choisir l'image à analyser</h2>
+        <input type="file" id="image" hidden class="form-control-file btn col-md-12" name="picture">
+        <button class="btn btn-success col-md-12 mb-4" type="button" id="upload">Sélectionner l'image</button>
         <input type="hidden" id="predic" name="predic">
         <input type="hidden" id="mainPredic" name="mainPredic">
         <button type="button" id="sub" class="btn btn-info col-md-12" onclick="presub();">Valider</button>
@@ -10,36 +11,38 @@
 </form>
 
 {{#if list}}
-    <table id="dtBasicExample" class="table table-bordered table-hover table-responsive" cellspacing="0" width="100%">
-        <thead>
-            <tr>
+<div class="table-responsive">
+    <table id="dtBasicExample" class="table table-hover table-responsive table-striped" cellspacing="0" width="100%">
+        <thead class="thead-dark">
+            <tr class="mb-5">
                 <th width="20%">Image</th>
                 {{#if sorted}}
-                    <th width="10%">Date <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
+                    <th width="12%">Date <a class="float-right text-success cursor-pointer" onclick='refresh({{currentPage}}, null, false, {{filtre}} )'>↓</a></th>
                 {{else}}
-                    <th width="10%">Date <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
+                    <th width="12%">Date <a class="float-right cursor-pointer" onclick='refresh({{currentPage}}, null, true, {{filtre}} )'>↓</a></th>
                 {{/if}}
-                <th width="15%">Nom</th>
-                <th width="5%">Taille</th>
-                <th width="15%">Type reconnus</th>
-                <th width="20%">Taux de réussites</th>
-                <th width="10%"></th>
+                <th width="10%">Nom</th>
+                <th width="10%">Taille</th>
+                <th width="25%">Type</th>
+                <th width="10%">Taux</th>
+                <th width="1%"></th>
             </tr>
         </thead>    
-        <tbody>
+        <tbody >
             {{#each list}}
-            <tr class="cursor-pointer">
-                <td style="padding:0"><img width="200" src="{{this.link}}"/></td>
+            <tr>
+                <td width="200" style="padding:0"><img width="100%" src="{{this.link}}"/></td>
                 <td><p>{{this.createdAt}}</p></td>
                 <td><p>{{this.name}}</p></td>
-                <td><p>{{this.octets}}</p></td>
+                <td><p>{{this.octets}} ko</p></td>
                 <td>{{{this.foundName}}}</td>
                 <td>{{{this.successRate}}}</td>
-                <td><a href="/tensorflow/delete/{{this._id}}" onclick="return confirm('Etes-vous sur de vouloir supprimer ?');" class="col-12"><i class="text-danger fa fa-trash fa-lg" aria-hidden="true"></i></a></td>
+                <td><a href="/tensorflow/delete/{{this._id}}" onclick="return confirm('Etes-vous sur de vouloir supprimer ?');" class="col-12"><i class="text-danger fa fa-ban fa-lg " aria-hidden="true"></i></a></td>
             </tr>
             {{/each}}
         </tbody>
     </table>
+</div>
 {{else}}
     <h2 class="text-center my-5">Aucune analyse</h2>
 {{/if}}
@@ -52,7 +55,7 @@
 
 <div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="loadMeLabel">
   <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
-    <div class="modal-content">
+    <div class="modal-content shadow rounded">
         <blockquote class="blockquote px-4 py-2">
             <h3 class="mb-0">Chargement...</h3>
             <footer class="blockquote-footer">C'est pas très Charlie</footer>
@@ -79,6 +82,8 @@
             var reader = new FileReader();
             reader.onload = function(e) {
                 $('#img').attr('src', e.target.result);
+                $('#upload').html($('#image').value)
+                $('#sub').show();
             }
             reader.readAsDataURL(input.files[0]); // convert to base64 string
         }
@@ -106,4 +111,8 @@
     $("#image").change(function() {
         readURL(this);
     });
+
+    $('#sub').hide();
+    $('#upload').on('click', function() { $('#image').click();return false;});
+
 </script>  
